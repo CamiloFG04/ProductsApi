@@ -15,7 +15,7 @@ router.post('/auth',async (request,response)=>{
         });
         if (user != null) {
             const accesstoken = generateAccessToken(email);
-            response.header('authorization',accesstoken).status(201).json({status:200,message:'authenticated user',token:accesstoken});
+            response.header('authorization',accesstoken).status(200).json({status:200,message:'authenticated user',token:accesstoken});
         }
     } catch (error) {
         response.json({status:500,message:'Internal Server Error'})

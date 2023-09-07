@@ -3,7 +3,7 @@ const token = require('jsonwebtoken');
 const secrect = 'secretvrm';
 
 function generateAccessToken(email) {
-    return token.sign({email:email},secrect,{expiresIn:'5m'});
+    return token.sign({email:email},secrect,{expiresIn:'50m'});
 }
 
 function validatedToken(request,response,next) {

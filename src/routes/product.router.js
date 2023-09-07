@@ -52,13 +52,13 @@ router.put('/update/:id', validatedToken ,async (request,response)=>{
     try {
         const {id} = request.params
         const {lot,name,price,quantity,entry_date} = request.body;
-        const product = await Product.update({ lot,name,price,quantity,entry_date},{
+        const product = await Product.update({lot,name,price,quantity,entry_date},{
             where:{
                 id
             }
         }
         );
-        response.status(200).json({status:200,product});
+        response.status(200).json({status:200,message:'Product updated successfully'});
     } catch (error) {
         response.json({status:500,message:'Internal Server Error'})
     }

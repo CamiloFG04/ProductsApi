@@ -57,7 +57,7 @@ router.get('/user/:id', validatedToken, async (request,response)=>{
                 user_id:id,
             },
         });
-        response.status(200).json(product);
+        response.status(200).json({status:200,product});
         
     } catch (error) {
         response.json({status:500,message:'Internal Server Error'})
