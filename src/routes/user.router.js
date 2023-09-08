@@ -1,5 +1,5 @@
 const {User} = require('../models/Models');
-const { generateAccessToken, validatedToken } = require('../utilities/auth');
+const { generateAccessToken, validatedToken, checkRoleAuth} = require('../utilities/auth');
 // require('dotenv').config();
 const router = require('express').Router();
 
@@ -7,17 +7,19 @@ const router = require('express').Router();
 router.post('/auth',async (request,response)=>{
     try {
         const {email,password} = request.body;
-        const user = User.findOne(
+        const login = await User.findOne(
             {where:{
                 email,
                 password,
             },
         });
-        if (user != null) {
-            const accesstoken = generateAccessToken(email);
+        if (login != null) {
+            const  user = {email,role:login.rol}
+            const accesstoken = generateAccessToken(user);
             response.header('authorization',accesstoken).status(200).json({status:200,message:'authenticated user',token:accesstoken});
         }
     } catch (error) {
+        console.log(error);
         response.json({status:500,message:'Internal Server Error'})
     }
     
@@ -25,7 +27,7 @@ router.post('/auth',async (request,response)=>{
 
 
 //list users
-router.get('/',validatedToken, async (request,response)=>{
+router.get('/',validatedToken(['Administrator']), async (request,response)=>{
     try {
         const users = await User.findAll();
         response.status(200).json({status:200,username: request.user,users});
@@ -36,7 +38,7 @@ router.get('/',validatedToken, async (request,response)=>{
 });
 
 //list one user
-router.get('/:id',validatedToken, async (request,response)=>{
+router.get('/:id',validatedToken(['Administrator']), async (request,response)=>{
     try {
         const {id} = request.params
         const user = await User.findByPk(id);
@@ -50,8 +52,8 @@ router.get('/:id',validatedToken, async (request,response)=>{
 //create user
 router.post('/store',async (request,response)=>{
     try {
-        const {name,lastname,document,email,password} = request.body;
-        const user = await User.create({name,lastname,document,email,password});
+        const {name,lastname,document,email,password,rol} = request.body;
+        const user = await User.create({name,lastname,document,email,password,rol});
         response.status(201).json({status:201,message:'Created user',user});
         
     } catch (error) {

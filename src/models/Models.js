@@ -1,81 +1,83 @@
 const { DataTypes } = require("sequelize");
 const db = require("../db/database");
 
-const User = db.define('users',{
-    name:{
-        type:DataTypes.STRING,
+const User = db.define('users', {
+    name: {
+        type: DataTypes.STRING,
         allowNull: true
     },
-    lastname:{
-        type:DataTypes.STRING,
+    lastname: {
+        type: DataTypes.STRING,
         allowNull: true
     },
-    document:{
-        type:DataTypes.INTEGER,
+    document: {
+        type: DataTypes.INTEGER,
         allowNull: true
     },
-    email:{
-        type:DataTypes.STRING,
+    email: {
+        type: DataTypes.STRING,
         allowNull: true,
         unique: true
     },
-    password:{
-        type:DataTypes.STRING,
+    password: {
+        type: DataTypes.STRING,
         allowNull: true,
         // validate: {
         //     is: /^[0-9a-f]{64}$/i
         // }
     },
-    rol:{
-        type:DataTypes.INTEGER
+    rol: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: 'Client'
     }
 });
-const Product = db.define('products',{
-    lot:{
-        type:DataTypes.STRING,
+const Product = db.define('products', {
+    lot: {
+        type: DataTypes.STRING,
         allowNull: true
     },
-    name:{
-        type:DataTypes.STRING,
+    name: {
+        type: DataTypes.STRING,
         allowNull: true
     },
-    price:{
-        type:DataTypes.FLOAT(10.2),
+    price: {
+        type: DataTypes.FLOAT(10.2),
         allowNull: true
     },
-    quantity:{
-        type:DataTypes.STRING,
+    quantity: {
+        type: DataTypes.STRING,
         allowNull: true,
         unique: true
     },
-    entry_date:{
-        type:DataTypes.DATE,
+    entry_date: {
+        type: DataTypes.DATE,
         allowNull: true,
     },
 });
 
-const ProductsUsers = db.define('product_users',{
-    id:{
+const ProductsUsers = db.define('product_users', {
+    id: {
         type: DataTypes.INTEGER,
-        primaryKey:true,
-        autoIncrement:true,
+        primaryKey: true,
+        autoIncrement: true,
     },
     user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      product_id: {
+    },
+    product_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      quantity: {
+    },
+    quantity: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      },
-      total: {
+    },
+    total: {
         type: DataTypes.FLOAT,
         allowNull: true,
-      },
+    },
 });
 
 
@@ -83,12 +85,12 @@ Product.belongsToMany(User, {
     through: 'product_users',
     as: 'users',
     foreignKey: 'product_id',
-  });
-  
-  User.belongsToMany(Product, {
+});
+
+User.belongsToMany(Product, {
     through: 'product_users',
     as: 'products',
     foreignKey: 'user_id',
-  });
+});
 
-module.exports = {User,Product,ProductsUsers};
+module.exports = { User, Product, ProductsUsers };

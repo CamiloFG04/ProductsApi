@@ -7,7 +7,7 @@ const router = require('express').Router();
 
 
 // list all products
-router.get('/',validatedToken ,async (request,response)=>{
+router.get('/',validatedToken(['Administrator']) ,async (request,response)=>{
     try {
         const products = await Product.findAll();
         if (products.length > 0) {
@@ -24,7 +24,7 @@ router.get('/',validatedToken ,async (request,response)=>{
 
 
 //list one product
-router.get('/:id', validatedToken,async (request,response)=>{
+router.get('/:id', validatedToken(['Administrator']),async (request,response)=>{
     try {
         const {id} = request.params;
         const product = await Product.findByPk(id);
@@ -36,7 +36,7 @@ router.get('/:id', validatedToken,async (request,response)=>{
 });
 
 //create product
-router.post('/store',validatedToken, async (request,response)=>{
+router.post('/store',validatedToken(['Administrator']), async (request,response)=>{
     try {
         const {lot,name,price,quantity,entry_date} = request.body;
         const product = await Product.create({lot,name,price,quantity,entry_date});
@@ -48,7 +48,7 @@ router.post('/store',validatedToken, async (request,response)=>{
 });
 
 // update product
-router.put('/update/:id', validatedToken ,async (request,response)=>{
+router.put('/update/:id', validatedToken(['Administrator']) ,async (request,response)=>{
     try {
         const {id} = request.params
         const {lot,name,price,quantity,entry_date} = request.body;
@@ -65,7 +65,7 @@ router.put('/update/:id', validatedToken ,async (request,response)=>{
 });
 
 // delete product
-router.delete('/destroy/:id',validatedToken, async(request,response)=>{
+router.delete('/destroy/:id',validatedToken(['Administrator']), async(request,response)=>{
     try {
         const {id} = request.params
         const product = await Product.destroy({where:{
